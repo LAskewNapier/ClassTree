@@ -1,0 +1,3 @@
+displayName = Class Trees
+author = Skewie02
+version = 0.1
