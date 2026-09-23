@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI;
 
 namespace ClassTree
 {
@@ -19,6 +20,7 @@ namespace ClassTree
 	public class ClassTreePlayer : ModPlayer
 	{
 		public int ChosenClass = -1; // -1 = None, 0 = Melee, 1 = Ranged, 2 = Magic, 3 = Summoner
+
 		public override void SaveData(TagCompound tag)
 		{
 			tag["ChosenClass"] = ChosenClass;
@@ -26,34 +28,53 @@ namespace ClassTree
 		public override void LoadData(TagCompound tag)
 		{
 			ChosenClass = tag.GetInt("ChosenClass");
-		}
-		public override IEnumerable<Item> AddStartingItems(bool mediumCoreDeath)
+		}        
+		public override void OnEnterWorld()
+        {
+			if (ChosenClass == -1)
+			{
+				for (int i = 0; i < Player.inventory.Length; i++)
+				{
+					if (Player.inventory[i].type != ItemID.None)
+					{
+						if (Player.inventory[i].type == ItemID.CopperShortsword || Player.inventory[i].type == ItemID.CopperBow || Player.inventory[i].type == ItemID.AmethystStaff || Player.inventory[i].type == ItemID.BabyBirdStaff)
+						{
+							Player.inventory[i].TurnToAir();
+						}
+					}
+				}
+			}
+            if (ChosenClass == -1)
+			{
+				Main.NewText("this part works");
+				IngameFancyUI.OpenUIState(new UI.ClassSelectionUI());
+			}
+        }
+		public void GiveStartingItems()
 		{
+			Main.NewText("AddStartingItems called with ChosenClass: " + ChosenClass);
 			if (ChosenClass == 0) // Melee
 			{
-				return new[] { new Item(ItemID.CopperBroadsword) };
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.CopperShortsword) ; 
 			}
 			else if (ChosenClass == 1) // Ranged
 			{
-				Item bow = new Item(ItemID.CopperBow);
-				Item arrows = new Item(ItemID.WoodenArrow, 100);
-				return new[] { bow, arrows };
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.CopperBow);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.WoodenArrow, 100);
 			}
 			else if (ChosenClass == 2) // Magic
 			{
-				Item staff = new Item(ItemID.AmethystStaff);
-				Item manaCrystal = new Item(ItemID.ManaCrystal, 1);
-				return new[] { staff, manaCrystal };
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.AmethystStaff);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.ManaCrystal, 1);
 			}
 			else if (ChosenClass == 3) // Summoner
 			{
-				Item birdStaff = new Item(ItemID.BabyBirdStaff);
-				Item whip = new Item(ItemID.BlandWhip);
-				return new[] { birdStaff, whip };
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.BabyBirdStaff);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.BlandWhip);
 			}
-
-			return Enumerable.Empty<Item>();
 		}
+
+
 	}
 
 
