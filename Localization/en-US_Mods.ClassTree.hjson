@@ -1,1 +1,20 @@
+"Keybinds.Open Skill Tree.DisplayName": Open  Skill  Tree
 
+Items: {
+	BestedCrown: {
+		DisplayName: Bested Crown
+		Tooltip: A crown that signifies your victory over the mighty King Slime.
+	}
+}
+
+Projectiles: {
+	FriendlySpikedSlime.DisplayName: Friendly Spiked Slime
+	FriendlySpikedSlimeSpike.DisplayName: Friendly Spiked Slime Spike
+}
+
+Buffs: {
+	FriendlySpikedSlimeBuff: {
+		DisplayName: Friendly Spiked Slime Buff
+		Description: Mods.ClassTree.Buffs.FriendlySpikedSlimeBuff.Description
+	}
+}
