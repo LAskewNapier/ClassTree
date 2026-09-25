@@ -5,6 +5,11 @@ Items: {
 		DisplayName: Bested Crown
 		Tooltip: A crown that signifies your victory over the mighty King Slime.
 	}
+
+	BloodyTear: {
+		DisplayName: Bloody Tear
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -16,5 +21,10 @@ Buffs: {
 	FriendlySpikedSlimeBuff: {
 		DisplayName: Friendly Spiked Slime Buff
 		Description: Mods.ClassTree.Buffs.FriendlySpikedSlimeBuff.Description
+	}
+
+	EyeDashBuff: {
+		DisplayName: Eye Dash Buff
+		Description: Mods.ClassTree.Buffs.EyeDashBuff.Description
 	}
 }

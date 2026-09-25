@@ -25,14 +25,14 @@ namespace ClassTree.Items
             // Set the hasReceivedCrown flag to true when the item is used
             var modPlayer = player.GetModPlayer<ClassTreePlayer>();
 
-            if (modPlayer.UnlockedSkills.Contains("Tear_Unlocked"))
+            if (modPlayer.UnlockedSkills.Contains("Eye_Unlocked"))
             {
                 // Player has already used the Bloody Tear, do not allow further use
                 Main.NewText("You have already used the Bloody Tear and unlocked the skill tree.");
                 return false;
             }
 
-            modPlayer.UnlockedSkills.Add("Tear_Unlocked");
+            modPlayer.UnlockedSkills.Add("Eye_Unlocked");
             Main.NewText("You have unlocked the Tear skill tree nodes!", 255, 215, 0); // Display a message in gold color
             return true; // Allow the item to be used
         }

@@ -41,6 +41,8 @@ namespace ClassTree
 		public bool hasReceivedTear = false; // Tracks if the player has received the Bloody Tear
 
 		public HashSet<string> UnlockedSkills = new HashSet<string>();
+
+		public bool hasTearDash = false;
 		public override void SaveData(TagCompound tag)
 		{
 			tag["ChosenClass"] = ChosenClass;
@@ -69,16 +71,11 @@ namespace ClassTree
 						}
 					}
 				}
-			}
-            if (ChosenClass == -1)
-			{
-				Main.NewText("this part works");
 				IngameFancyUI.OpenUIState(new UI.ClassSelectionUI());
 			}
         }
 		public void GiveStartingItems()
 		{
-			Main.NewText("AddStartingItems called with ChosenClass: " + ChosenClass);
 			if (ChosenClass == 0) // Melee
 			{
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.CopperBroadsword); 
@@ -97,7 +94,13 @@ namespace ClassTree
 			else if (ChosenClass == 2) // Magic
 			{
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.AmethystStaff);
-				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.ManaCrystal, 1);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.ManaCrystal, 20);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SlimeCrown, 5);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SuspiciousLookingEye, 5);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.LunarFlareBook);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.NebulaHelmet);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.NebulaBreastplate);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.NebulaLeggings);
 			}
 			else if (ChosenClass == 3) // Summoner
 			{
@@ -105,9 +108,15 @@ namespace ClassTree
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.BlandWhip);
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SlimeStaff);
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.RainbowWhip);
-				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SlimeCrown);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SlimeCrown, 5);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SuspiciousLookingEye, 5);
 			}
 		}
+
+        public override void ResetEffects()
+        {
+            hasTearDash = false;
+        }
 
         public override void PostUpdateRunSpeeds()
         {
@@ -119,16 +128,65 @@ namespace ClassTree
 
 		public override void PostUpdateEquips()
 		{
+			ApplyStarterEffects();
+			ApplyKingSlimeEffects();
+			ApplyTearEffects();
+		}
+
+		private void ApplyStarterEffects()
+		{
 			if (UnlockedSkills.Contains("Damage"))
 			{
 				Player.GetDamage(DamageClass.Generic) += 0.05f; // Increase damage by 5%
 			}
+		}
 
+		private void ApplyKingSlimeEffects()
+		{
 			if (UnlockedSkills.Contains("Crown_Unlocked") && UnlockedSkills.Contains("Slime_Path_A") && ChosenClass == 2)
 			{
 				Player.GetCritChance(DamageClass.Magic) += 3f; // Increase magic crit chance by 3%
 			}
 		}
+
+		private void ApplyTearEffects()
+		{
+			if (!UnlockedSkills.Contains("Eye_Unlocked"))
+			{
+				return;
+			}
+			bool lowhp = Player.statLife <= Player.statLifeMax2 * 0.25f;
+
+			//add dash to ungrade selection
+			if (UnlockedSkills.Contains("Eye_Path_A") && (ChosenClass == 0 || ChosenClass == 3))
+			{
+				Player.AddBuff(ModContent.BuffType<Buff.EyeDashBuff>(), 2);
+			}
+
+			if (UnlockedSkills.Contains("Eye_Path_B") && lowhp && (ChosenClass == 0 || ChosenClass == 3))
+			{
+				Player.GetAttackSpeed(DamageClass.Melee) += 0.05f;
+				Player.GetAttackSpeed(DamageClass.SummonMeleeSpeed) += 0.05f;
+			}
+		}
+
+        public override void PreUpdate()
+        {
+            if (hasTearDash)
+			{
+				Player.dashType = 2;
+			}
+        }
+
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
+        {
+            if (UnlockedSkills.Contains("Eye_Unlocked") && UnlockedSkills.Contains("Eye_Path_A") && ChosenClass == 1 && proj.DamageType == DamageClass.Ranged)
+			{
+				modifiers.CritDamage += 0.05f;
+			}
+        }
+
+
 
 		public override void ModifyMaxStats(out StatModifier Health, out StatModifier Mana)
 		{
@@ -141,6 +199,12 @@ namespace ClassTree
 			}
 		}
 		public override void OnHurt(Player.HurtInfo info)
+		{
+			ApplySlimeMeleeRetaliation(info);
+			ApplyEyeStarDrops(info);
+		}
+
+		public void ApplySlimeMeleeRetaliation(Player.HurtInfo info)
 		{
 			if (ChosenClass != 0) return; 
 			if (UnlockedSkills.Contains("Crown_Unlocked") && UnlockedSkills.Contains("Slime_Path_A"))
@@ -163,7 +227,31 @@ namespace ClassTree
 				}
 
 			}
+		}
 
+		private void ApplyEyeStarDrops(Player.HurtInfo info)
+		{
+			if (ChosenClass != 2) return;
+			if (!UnlockedSkills.Contains("Eye_Unlocked") || !UnlockedSkills.Contains("Eye_Path_A")) return;
+			int damage = (int)Player.GetTotalDamage(DamageClass.Magic).ApplyTo(30f);
+			for (int i = 0; i < 3; i++)
+			{
+				Vector2 spawnPos = Player.Center + new Vector2(Main.rand.Next(-20, 200), -400f);
+				Vector2 velocity = new Vector2(0f, 12f);
+
+				int star = Projectile.NewProjectile(
+					Player.GetSource_OnHurt(info.DamageSource),
+					spawnPos,
+					velocity,
+					ProjectileID.FallingStar,
+					damage,
+					0f,
+					Player.whoAmI);
+				
+				Main.projectile[star].friendly = true;
+				Main.projectile[star].hostile = false;
+				Main.projectile[star].DamageType = DamageClass.Magic;
+			}
 		}
 
 

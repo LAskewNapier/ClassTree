@@ -1,6 +1,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
 
 namespace ClassTree.GlobalItems
 {
@@ -30,5 +31,24 @@ namespace ClassTree.GlobalItems
                 target.AddBuff(BuffID.Slimed, 180); // Apply the Slimed debuff for 3 seconds (180 ticks)
             }
         }
+
+        public override void ModifyShootStats( Item item, Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+		{
+            var modPlayer = player.GetModPlayer<ClassTreePlayer>();
+    		// Safety check: ensure we have a valid ModPlayer instance
+    		if (!modPlayer.UnlockedSkills.Contains("Eye_Unlocked") || !modPlayer.UnlockedSkills.Contains("Eye_Path_B"))
+        		return;
+
+    		// Class check: only Ranged (1) or Magic (2) get the bonus
+    		if (modPlayer.ChosenClass != 1 && modPlayer.ChosenClass != 2)
+        		return;
+
+    		// Health check: only active at 25% HP or lower
+    		if (player.statLife > player.statLifeMax2 * 0.25f)
+        		return;
+
+    		// Apply the 5% velocity boost
+    		velocity *= 3f;
+		}
     }
 }
