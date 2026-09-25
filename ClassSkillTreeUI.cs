@@ -41,7 +41,7 @@ namespace ClassTree.UI
 
             var modPlayer = Main.LocalPlayer.GetModPlayer<ClassTreePlayer>();
             AddSkillNode(mainPanel, "Slime_Path_A", GetCrownNodeText(modPlayer.ChosenClass), -100f, 220f, 3);
-            AddSkillNode(mainPanel, "Slime_Path_B", "Attacks inflict Slimed\n(33% chance)", 100f, 220f, 4);
+            AddSkillNode(mainPanel, "Slime_Path_B", "Attacks inflict Slow\n(33% chance)", 100f, 220f, 4);
 
             AddSkillNode(mainPanel, "Eye_Path_A", GetEyeNodeText1(modPlayer.ChosenClass), -100f, 360f, 5);
             AddSkillNode(mainPanel, "Eye_Path_B", GetEyeNodeText2(modPlayer.ChosenClass), 100f, 360f, 5);
@@ -93,7 +93,7 @@ namespace ClassTree.UI
             {
                 case 0: return "Melee Speed +5%\nat <=25 Hp";
                 case 1: return "Proj. velocity +5%\nat <=25 Hp";
-                case 2: return "Proj. velocity +5%\nat <=25 Hp";
+                case 2: return "Magic use time +5%\nat <=25 Hp";
                 case 3: return "Whip Speed +5%\nat <=25 Hp";
                 default:return "Eye Skills 2";
             }

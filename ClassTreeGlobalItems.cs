@@ -28,7 +28,7 @@ namespace ClassTree.GlobalItems
 
             if (Main.rand.NextFloat() < 0.33f) // 33% chance to apply the effect
             {
-                target.AddBuff(BuffID.Slimed, 180); // Apply the Slimed debuff for 3 seconds (180 ticks)
+                target.AddBuff(BuffID.Slow, 180); // Apply the Slow debuff for 3 seconds (180 ticks)
             }
         }
 
