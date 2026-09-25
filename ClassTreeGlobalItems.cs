@@ -39,8 +39,8 @@ namespace ClassTree.GlobalItems
     		if (!modPlayer.UnlockedSkills.Contains("Eye_Unlocked") || !modPlayer.UnlockedSkills.Contains("Eye_Path_B"))
         		return;
 
-    		// Class check: only Ranged (1) or Magic (2) get the bonus
-    		if (modPlayer.ChosenClass != 1 && modPlayer.ChosenClass != 2)
+    		// Class check: only Ranged
+    		if (modPlayer.ChosenClass != 1)
         		return;
 
     		// Health check: only active at 25% HP or lower
@@ -50,5 +50,41 @@ namespace ClassTree.GlobalItems
     		// Apply the 5% velocity boost
     		velocity *= 3f;
 		}
+
+        public override float UseTimeMultiplier(Item item, Player player)
+        {
+            var modPlayer = player.GetModPlayer<ClassTreePlayer>();
+            if (!modPlayer.UnlockedSkills.Contains("Eye_Unlocked") || !modPlayer.UnlockedSkills.Contains("Eye_Path_B"))
+        		return 1f;
+
+    		// Class check: only Ranged
+    		if (modPlayer.ChosenClass != 2)
+        		return 1f;
+
+            // Health check: only active at 25% HP or lower
+    		if (player.statLife > player.statLifeMax2 * 0.25f)
+        		return 1f;
+
+            return 0.5f;
+
+        }
+
+        public override float UseAnimationMultiplier(Item item, Player player)
+        {
+            var modPlayer = player.GetModPlayer<ClassTreePlayer>();
+            if (!modPlayer.UnlockedSkills.Contains("Eye_Unlocked") || !modPlayer.UnlockedSkills.Contains("Eye_Path_B"))
+        		return 1f;
+
+    		// Class check: only Ranged
+    		if (modPlayer.ChosenClass != 2)
+        		return 1f;
+
+            // Health check: only active at 25% HP or lower
+    		if (player.statLife > player.statLifeMax2 * 0.25f)
+        		return 1f;
+
+            return 0.5f;
+
+        }
     }
 }

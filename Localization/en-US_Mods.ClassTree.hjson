@@ -8,7 +8,7 @@ Items: {
 
 	BloodyTear: {
 		DisplayName: Bloody Tear
-		Tooltip: ""
+		Tooltip: The lens of a blooded eye.
 	}
 }
 
@@ -20,7 +20,7 @@ Projectiles: {
 Buffs: {
 	FriendlySpikedSlimeBuff: {
 		DisplayName: Friendly Spiked Slime Buff
-		Description: Mods.ClassTree.Buffs.FriendlySpikedSlimeBuff.Description
+		Description: Spiky Little Guy
 	}
 
 	EyeDashBuff: {

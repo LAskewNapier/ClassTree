@@ -81,6 +81,7 @@ namespace ClassTree
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.CopperBroadsword); 
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SlimeCrown, 5);
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.Zenith);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SuspiciousLookingEye, 5);
 			}
 			else if (ChosenClass == 1) // Ranged
 			{
@@ -89,6 +90,7 @@ namespace ClassTree
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.VortexBeater);
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.MusketBall, 1000);
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SlimeCrown, 5);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SuspiciousLookingEye, 5);
 
 			}
 			else if (ChosenClass == 2) // Magic
@@ -131,6 +133,11 @@ namespace ClassTree
 			ApplyStarterEffects();
 			ApplyKingSlimeEffects();
 			ApplyTearEffects();
+
+			if (hasTearDash)
+			{
+				Player.dashType = 2;
+			}
 		}
 
 		private void ApplyStarterEffects()
@@ -170,13 +177,7 @@ namespace ClassTree
 			}
 		}
 
-        public override void PreUpdate()
-        {
-            if (hasTearDash)
-			{
-				Player.dashType = 2;
-			}
-        }
+
 
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
         {
