@@ -39,6 +39,7 @@ namespace ClassTree
 		public int ChosenClass = -1; // -1 = None, 0 = Melee, 1 = Ranged, 2 = Magic, 3 = Summoner
 		public bool hasReceivedCrown = false; // Track if the player has received the Bested Crown
 		public bool hasReceivedTear = false; // Tracks if the player has received the Bloody Tear
+		public bool hasReceivedEvil = false; //Tracks if the player has received either the Eater's Tooth or the Baby Creeper
 
 		public HashSet<string> UnlockedSkills = new HashSet<string>();
 
@@ -82,6 +83,11 @@ namespace ClassTree
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SlimeCrown, 5);
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.Zenith);
 				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SuspiciousLookingEye, 5);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.WingsSolar);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SolarFlareBreastplate);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SolarFlareHelmet);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.SolarFlareLeggings);
+				Player.QuickSpawnItem(Player.GetSource_Misc("ClassTree"), ItemID.BloodySpine, 5);
 			}
 			else if (ChosenClass == 1) // Ranged
 			{

@@ -10,6 +10,16 @@ Items: {
 		DisplayName: Bloody Tear
 		Tooltip: The lens of a blooded eye.
 	}
+
+	BabyCreeper: {
+		DisplayName: Baby Creeper
+		Tooltip: ""
+	}
+
+	EatersTooth: {
+		DisplayName: Eaters Tooth
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
